@@ -228,5 +228,5 @@ Thus, the lane detection pipeline is successfully implemented by completing the 
 
 ##  Developed By
 
-* **Name:** ____________________________
-* **Register No:** ______________________
+* **Name:** Janesha S
+* **Register No:** 212225240056
