@@ -45,11 +45,13 @@ import matplotlib.pyplot as plt
 ###  Step 2: Read the Image
 
 ```python
-# Read the image using OpenCV
+image_path = list(uploaded.keys())[0]
 
-###
-# Your Code Here
-###
+img = cv2.imread(image_path)
+
+img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+print("Image loaded successfully")
 ```
 
 ---
@@ -57,11 +59,7 @@ import matplotlib.pyplot as plt
 ###  Step 3: Convert to Grayscale
 
 ```python
-# Convert to grayscale.
-
-###
-# Your Code Here
-###
+gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
 ```
 
 ---
@@ -70,10 +68,10 @@ import matplotlib.pyplot as plt
 
 ```python
 plt.figure(figsize=(10,5))
-
-###
-# Your Code Here
-###
+plt.imshow(gray, cmap='gray')
+plt.title("Grayscale Image")
+plt.axis('off')
+plt.show()
 ```
 
 ---
@@ -81,12 +79,15 @@ plt.figure(figsize=(10,5))
 ###  Step 5: Thresholding
 
 ```python
-# Apply thresholding
+threshold = 150
 
-threshold = 
-###
-# Your Code Here
-###
+_, thresh = cv2.threshold(gray, threshold, 255, cv2.THRESH_BINARY)
+
+plt.figure(figsize=(10,5))
+plt.imshow(thresh, cmap='gray')
+plt.title("Thresholded Image")
+plt.axis('off')
+plt.show()
 ```
 
 ---
@@ -94,8 +95,27 @@ threshold =
 ###  Step 6: Region of Interest (ROI)
 
 ```python
-# ROI masking already provided
-# (Do not modify)
+height, width = gray.shape
+
+mask = np.zeros_like(gray)
+
+polygon = np.array([[
+    (0, height),
+    (width, height),
+    (width, int(height * 0.6)),
+    (int(width * 0.5), int(height * 0.4)),
+    (0, int(height * 0.6))
+]], np.int32)
+
+cv2.fillPoly(mask, polygon, 255)
+
+roi = cv2.bitwise_and(thresh, mask)
+
+plt.figure(figsize=(10,5))
+plt.imshow(roi, cmap='gray')
+plt.title("ROI Masked Image")
+plt.axis('off')
+plt.show()
 ```
 
 ---
@@ -103,11 +123,13 @@ threshold =
 ### Step 7: Edge Detection (Canny)
 
 ```python
-# Perform Edge Detection
+edges = cv2.Canny(roi, 50, 150)
 
-###
-# Your Code Here
-###
+plt.figure(figsize=(10,5))
+plt.imshow(edges, cmap='gray')
+plt.title("Edge Detected Image")
+plt.axis('off')
+plt.show()
 ```
 
 ---
@@ -115,11 +137,13 @@ threshold =
 ###  Step 8: Gaussian Blur
 
 ```python
-# Apply Gaussian Blur
+blur = cv2.GaussianBlur(edges, (5,5), 0)
 
-###
-# Your Code Here
-###
+plt.figure(figsize=(10,5))
+plt.imshow(blur, cmap='gray')
+plt.title("Gaussian Blurred Image")
+plt.axis('off')
+plt.show()
 ```
 
 ---
@@ -128,10 +152,31 @@ threshold =
 
 ```python
 # Detect lines using Hough Transform
+# Detect lines using Hough Transform
 
-###
-# Your Code Here
-###
+lines = cv2.HoughLinesP(
+    blur,
+    rho=1,
+    theta=np.pi/180,
+    threshold=50,
+    minLineLength=40,
+    maxLineGap=100
+)
+
+line_img = np.zeros_like(img)
+
+if lines is not None:
+    for line in lines:
+        x1, y1, x2, y2 = np.array(line).flatten()[:4]
+
+        cv2.line(line_img, (int(x1), int(y1)),
+                 (int(x2), int(y2)), (255, 0, 0), 5)
+
+plt.figure(figsize=(10,5))
+plt.imshow(line_img)
+plt.title("Detected Lines")
+plt.axis('off')
+plt.show()
 ```
 
 ---
@@ -139,8 +184,13 @@ threshold =
 ### Step 10: Lane Detection Logic
 
 ```python
-# Already implemented
-# (Do not modify)
+final = cv2.addWeighted(img, 0.8, line_img, 1, 0)
+
+plt.figure(figsize=(12,6))
+plt.imshow(final)
+plt.title("Final Lane Detection Output")
+plt.axis('off')
+plt.show()
 ```
 
 ---
@@ -155,6 +205,9 @@ threshold =
 * Smoothed image
 * Detected lines
 * Final lane detection output
+
+  <img width="1069" height="1190" alt="image" src="https://github.com/user-attachments/assets/5218f43d-1fce-4f14-8dbb-fdecfc036488" />
+
 
 ---
 
