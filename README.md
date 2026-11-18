@@ -206,7 +206,7 @@ plt.show()
 * Detected lines
 * Final lane detection output
 
-  <img width="1069" height="1190" alt="image" src="https://github.com/user-attachments/assets/5218f43d-1fce-4f14-8dbb-fdecfc036488" />
+<img width="890" height="1190" alt="image" src="https://github.com/user-attachments/assets/3204f438-c169-4575-91b8-840b8e9b7481" />
 
 
 ---
